@@ -1,6 +1,7 @@
 package features;
 
 import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -62,5 +63,39 @@ public class StepDefinitions {
         //Assert
         Assert.assertEquals(expectedResult, actualResult,0);
         System.out.println("The new final balance is: " + actualResult);
+    }
+
+    @Given("Danny has a starting balance of {double}")
+    public void dannyHasAStartingBalanceOfStartBalance(double startingBalance) {
+        danny.setAccountBalance(startingBalance);
+    }
+
+    @When("Danny now tops up by {double}")
+    public void dannyNowTopsUpByTopUpAmount(double topUp) {
+        danny.getAccount("EUR").addFunds(topUp);
+    }
+
+    @Then("The balance in his euro account should be {double}")
+    public void theBalanceInHisEuroAccountShouldBeNewBalance(double newBalance) {
+        double expectedResult = newBalance;
+        //Act
+        double actualResult = danny.getAccount("EUR").getBalance();
+        //Assert
+        Assert.assertEquals(expectedResult, actualResult,0);
+        System.out.println("The new final balance is: " + actualResult);
+    }
+
+    @And("PaymentService Rejects The Request")
+    public void paymentserviceRejectsTheRequest() {
+        PaymentService serv = new PaymentService("BankAccount");
+        serv.setRequestResult(false);
+        serv.requestTopUp();
+    }
+
+    @And("PaymentService Accepts The Request")
+    public void paymentserviceAcceptsTheRequest() {
+        PaymentService serv = new PaymentService("BankAccount");
+        serv.setRequestResult(true);
+        serv.requestTopUp();
     }
 }

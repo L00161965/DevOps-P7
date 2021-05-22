@@ -15,7 +15,7 @@ Feature: TopUp Account
   Scenario: Add money to Revolut account using bank account
     Given Danny has 20 euro in his euro Revolut account
     And Danny selects 230 euro as the topUp amount
-    And  Danny selects his BankAccount as his topUp method
+    And  Danny selects his DebitCard as his topUp method
     #And  Danny selects his BankAccount as his topUp method
     When Danny tops up
     Then The new balance of his euro account should now be 250
@@ -41,4 +41,16 @@ Feature: TopUp Account
 
     #The scenarios below will need a payment service that accepts or rejects a request to add funds
     Scenario: Payment service rejects the request
+      Given Danny has 20 euro in his euro Revolut account
+      And Danny selects 230 euro as the topUp amount
+      And  Danny selects his BankAccount as his topUp method
+      When PaymentService Rejects The Request
+      Then The new balance of his euro account should now be 20
+
     Scenario: Payment service accepts the request
+      Given Danny has 20 euro in his euro Revolut account
+      And Danny selects 230 euro as the topUp amount
+      And  Danny selects his BankAccount as his topUp method
+      When PaymentService Accepts The Request
+      Then Danny tops up
+      Then The new balance of his euro account should now be 250
